@@ -1,0 +1,1525 @@
+Terminals unused in grammar
+
+   tMAIN
+   tP0
+
+
+Grammar
+
+    0 $accept: Prg $end
+
+    1 Prg: Fonction Prg
+    2    | %empty
+
+    3 $@1: %empty
+
+    4 $@2: %empty
+
+    5 Fonction: tINT tID $@1 tPO Args tPF $@2 Body
+
+    6 Args: Arg ListeArgs
+    7     | %empty
+
+    8 ListeArgs: tVIR Arg ListeArgs
+    9          | %empty
+
+   10 Arg: tINT tID
+
+   11 $@3: %empty
+
+   12 Body: tACO $@3 Instrcs tACF
+
+   13 Instrcs: Instr Instrcs
+   14        | %empty
+
+   15 Instr: Decl
+   16      | If
+   17      | While
+   18      | Affect
+   19      | Invoc tPVIR
+   20      | Return
+
+   21 Decl: tINT DeclX tPVIR
+
+   22 DeclX: Decl1
+   23      | Decl1 tVIR DeclX
+
+   24 Decl1: tID
+   25      | tID tEGAL E
+
+   26 Affect: tID tEGAL E tPVIR
+
+   27 $@4: %empty
+
+   28 Invoc: tID tPO $@4 Params tPF
+
+   29 Return: tRETURN E tPVIR
+
+   30 Params: Param
+   31       | Param tVIR ParamsNext
+   32       | %empty
+
+   33 ParamsNext: Param
+   34           | Param tVIR ParamsNext
+
+   35 Param: E
+
+   36 $@5: %empty
+
+   37 $@6: %empty
+
+   38 If: tIF tPO E tPF $@5 Body $@6 Else
+
+   39 Else: tELSE Body
+   40     | %empty
+
+   41 $@7: %empty
+
+   42 While: tWHILE tPO E tPF $@7 Body
+
+   43 E: tPO E tPF
+   44  | tNB
+   45  | tID
+   46  | Invoc
+   47  | E tPLUS E
+   48  | E tMOINS E
+   49  | E tSTAR E
+   50  | E tDIV E
+   51  | E tOR E
+   52  | E tAND E
+   53  | E tMOD E
+   54  | E tEGEG E
+   55  | E tSUP E
+   56  | E tINF E
+   57  | E tSUPEG E
+   58  | E tINFEG E
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+tEGAL (258) 25 26
+tPF (259) 5 28 38 42 43
+tMOINS (260) 48
+tPLUS (261) 47
+tSTAR (262) 49
+tDIV (263) 50
+tMOD (264) 53
+tRETURN (265) 29
+tMAIN (266)
+tELSE (267) 39
+tINT (268) 5 10 21
+tOR (269) 51
+tAND (270) 52
+tVIR (271) 8 23 31 34
+tPVIR (272) 19 21 26 29
+tACO (273) 12
+tACF (274) 12
+tEGEG (275) 54
+tINF (276) 56
+tINFEG (277) 58
+tSUP (278) 55
+tSUPEG (279) 57
+tNB (280) 44
+tIF (281) 38
+tWHILE (282) 42
+tPO (283) 5 28 38 42 43
+tID (284) 5 10 24 25 26 28 45
+tP0 (285)
+
+
+Nonterminals, with rules where they appear
+
+$accept (31)
+    on left: 0
+Prg (32)
+    on left: 1 2, on right: 0 1
+Fonction (33)
+    on left: 5, on right: 1
+$@1 (34)
+    on left: 3, on right: 5
+$@2 (35)
+    on left: 4, on right: 5
+Args (36)
+    on left: 6 7, on right: 5
+ListeArgs (37)
+    on left: 8 9, on right: 6 8
+Arg (38)
+    on left: 10, on right: 6 8
+Body (39)
+    on left: 12, on right: 5 38 39 42
+$@3 (40)
+    on left: 11, on right: 12
+Instrcs (41)
+    on left: 13 14, on right: 12 13
+Instr (42)
+    on left: 15 16 17 18 19 20, on right: 13
+Decl (43)
+    on left: 21, on right: 15
+DeclX (44)
+    on left: 22 23, on right: 21 23
+Decl1 (45)
+    on left: 24 25, on right: 22 23
+Affect (46)
+    on left: 26, on right: 18
+Invoc (47)
+    on left: 28, on right: 19 46
+$@4 (48)
+    on left: 27, on right: 28
+Return (49)
+    on left: 29, on right: 20
+Params (50)
+    on left: 30 31 32, on right: 28
+ParamsNext (51)
+    on left: 33 34, on right: 31 34
+Param (52)
+    on left: 35, on right: 30 31 33 34
+If (53)
+    on left: 38, on right: 16
+$@5 (54)
+    on left: 36, on right: 38
+$@6 (55)
+    on left: 37, on right: 38
+Else (56)
+    on left: 39 40, on right: 38
+While (57)
+    on left: 42, on right: 17
+$@7 (58)
+    on left: 41, on right: 42
+E (59)
+    on left: 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58, on right:
+    25 26 29 35 38 42 43 47 48 49 50 51 52 53 54 55 56 57 58
+
+
+State 0
+
+    0 $accept: . Prg $end
+
+    tINT  shift, and go to state 1
+
+    $default  reduce using rule 2 (Prg)
+
+    Prg       go to state 2
+    Fonction  go to state 3
+
+
+State 1
+
+    5 Fonction: tINT . tID $@1 tPO Args tPF $@2 Body
+
+    tID  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: Prg . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 Prg: Fonction . Prg
+
+    tINT  shift, and go to state 1
+
+    $default  reduce using rule 2 (Prg)
+
+    Prg       go to state 6
+    Fonction  go to state 3
+
+
+State 4
+
+    5 Fonction: tINT tID . $@1 tPO Args tPF $@2 Body
+
+    $default  reduce using rule 3 ($@1)
+
+    $@1  go to state 7
+
+
+State 5
+
+    0 $accept: Prg $end .
+
+    $default  accept
+
+
+State 6
+
+    1 Prg: Fonction Prg .
+
+    $default  reduce using rule 1 (Prg)
+
+
+State 7
+
+    5 Fonction: tINT tID $@1 . tPO Args tPF $@2 Body
+
+    tPO  shift, and go to state 8
+
+
+State 8
+
+    5 Fonction: tINT tID $@1 tPO . Args tPF $@2 Body
+
+    tINT  shift, and go to state 9
+
+    $default  reduce using rule 7 (Args)
+
+    Args  go to state 10
+    Arg   go to state 11
+
+
+State 9
+
+   10 Arg: tINT . tID
+
+    tID  shift, and go to state 12
+
+
+State 10
+
+    5 Fonction: tINT tID $@1 tPO Args . tPF $@2 Body
+
+    tPF  shift, and go to state 13
+
+
+State 11
+
+    6 Args: Arg . ListeArgs
+
+    tVIR  shift, and go to state 14
+
+    $default  reduce using rule 9 (ListeArgs)
+
+    ListeArgs  go to state 15
+
+
+State 12
+
+   10 Arg: tINT tID .
+
+    $default  reduce using rule 10 (Arg)
+
+
+State 13
+
+    5 Fonction: tINT tID $@1 tPO Args tPF . $@2 Body
+
+    $default  reduce using rule 4 ($@2)
+
+    $@2  go to state 16
+
+
+State 14
+
+    8 ListeArgs: tVIR . Arg ListeArgs
+
+    tINT  shift, and go to state 9
+
+    Arg  go to state 17
+
+
+State 15
+
+    6 Args: Arg ListeArgs .
+
+    $default  reduce using rule 6 (Args)
+
+
+State 16
+
+    5 Fonction: tINT tID $@1 tPO Args tPF $@2 . Body
+
+    tACO  shift, and go to state 18
+
+    Body  go to state 19
+
+
+State 17
+
+    8 ListeArgs: tVIR Arg . ListeArgs
+
+    tVIR  shift, and go to state 14
+
+    $default  reduce using rule 9 (ListeArgs)
+
+    ListeArgs  go to state 20
+
+
+State 18
+
+   12 Body: tACO . $@3 Instrcs tACF
+
+    $default  reduce using rule 11 ($@3)
+
+    $@3  go to state 21
+
+
+State 19
+
+    5 Fonction: tINT tID $@1 tPO Args tPF $@2 Body .
+
+    $default  reduce using rule 5 (Fonction)
+
+
+State 20
+
+    8 ListeArgs: tVIR Arg ListeArgs .
+
+    $default  reduce using rule 8 (ListeArgs)
+
+
+State 21
+
+   12 Body: tACO $@3 . Instrcs tACF
+
+    tRETURN  shift, and go to state 22
+    tINT     shift, and go to state 23
+    tIF      shift, and go to state 24
+    tWHILE   shift, and go to state 25
+    tID      shift, and go to state 26
+
+    $default  reduce using rule 14 (Instrcs)
+
+    Instrcs  go to state 27
+    Instr    go to state 28
+    Decl     go to state 29
+    Affect   go to state 30
+    Invoc    go to state 31
+    Return   go to state 32
+    If       go to state 33
+    While    go to state 34
+
+
+State 22
+
+   29 Return: tRETURN . E tPVIR
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 39
+
+
+State 23
+
+   21 Decl: tINT . DeclX tPVIR
+
+    tID  shift, and go to state 40
+
+    DeclX  go to state 41
+    Decl1  go to state 42
+
+
+State 24
+
+   38 If: tIF . tPO E tPF $@5 Body $@6 Else
+
+    tPO  shift, and go to state 43
+
+
+State 25
+
+   42 While: tWHILE . tPO E tPF $@7 Body
+
+    tPO  shift, and go to state 44
+
+
+State 26
+
+   26 Affect: tID . tEGAL E tPVIR
+   28 Invoc: tID . tPO $@4 Params tPF
+
+    tEGAL  shift, and go to state 45
+    tPO    shift, and go to state 46
+
+
+State 27
+
+   12 Body: tACO $@3 Instrcs . tACF
+
+    tACF  shift, and go to state 47
+
+
+State 28
+
+   13 Instrcs: Instr . Instrcs
+
+    tRETURN  shift, and go to state 22
+    tINT     shift, and go to state 23
+    tIF      shift, and go to state 24
+    tWHILE   shift, and go to state 25
+    tID      shift, and go to state 26
+
+    $default  reduce using rule 14 (Instrcs)
+
+    Instrcs  go to state 48
+    Instr    go to state 28
+    Decl     go to state 29
+    Affect   go to state 30
+    Invoc    go to state 31
+    Return   go to state 32
+    If       go to state 33
+    While    go to state 34
+
+
+State 29
+
+   15 Instr: Decl .
+
+    $default  reduce using rule 15 (Instr)
+
+
+State 30
+
+   18 Instr: Affect .
+
+    $default  reduce using rule 18 (Instr)
+
+
+State 31
+
+   19 Instr: Invoc . tPVIR
+
+    tPVIR  shift, and go to state 49
+
+
+State 32
+
+   20 Instr: Return .
+
+    $default  reduce using rule 20 (Instr)
+
+
+State 33
+
+   16 Instr: If .
+
+    $default  reduce using rule 16 (Instr)
+
+
+State 34
+
+   17 Instr: While .
+
+    $default  reduce using rule 17 (Instr)
+
+
+State 35
+
+   44 E: tNB .
+
+    $default  reduce using rule 44 (E)
+
+
+State 36
+
+   43 E: tPO . E tPF
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 50
+
+
+State 37
+
+   28 Invoc: tID . tPO $@4 Params tPF
+   45 E: tID .
+
+    tPO  shift, and go to state 46
+
+    $default  reduce using rule 45 (E)
+
+
+State 38
+
+   46 E: Invoc .
+
+    $default  reduce using rule 46 (E)
+
+
+State 39
+
+   29 Return: tRETURN E . tPVIR
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tPVIR   shift, and go to state 58
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+
+State 40
+
+   24 Decl1: tID .
+   25      | tID . tEGAL E
+
+    tEGAL  shift, and go to state 64
+
+    $default  reduce using rule 24 (Decl1)
+
+
+State 41
+
+   21 Decl: tINT DeclX . tPVIR
+
+    tPVIR  shift, and go to state 65
+
+
+State 42
+
+   22 DeclX: Decl1 .
+   23      | Decl1 . tVIR DeclX
+
+    tVIR  shift, and go to state 66
+
+    $default  reduce using rule 22 (DeclX)
+
+
+State 43
+
+   38 If: tIF tPO . E tPF $@5 Body $@6 Else
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 67
+
+
+State 44
+
+   42 While: tWHILE tPO . E tPF $@7 Body
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 68
+
+
+State 45
+
+   26 Affect: tID tEGAL . E tPVIR
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 69
+
+
+State 46
+
+   28 Invoc: tID tPO . $@4 Params tPF
+
+    $default  reduce using rule 27 ($@4)
+
+    $@4  go to state 70
+
+
+State 47
+
+   12 Body: tACO $@3 Instrcs tACF .
+
+    $default  reduce using rule 12 (Body)
+
+
+State 48
+
+   13 Instrcs: Instr Instrcs .
+
+    $default  reduce using rule 13 (Instrcs)
+
+
+State 49
+
+   19 Instr: Invoc tPVIR .
+
+    $default  reduce using rule 19 (Instr)
+
+
+State 50
+
+   43 E: tPO E . tPF
+   47  | E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tPF     shift, and go to state 71
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+
+State 51
+
+   48 E: E tMOINS . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 72
+
+
+State 52
+
+   47 E: E tPLUS . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 73
+
+
+State 53
+
+   49 E: E tSTAR . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 74
+
+
+State 54
+
+   50 E: E tDIV . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 75
+
+
+State 55
+
+   53 E: E tMOD . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 76
+
+
+State 56
+
+   51 E: E tOR . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 77
+
+
+State 57
+
+   52 E: E tAND . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 78
+
+
+State 58
+
+   29 Return: tRETURN E tPVIR .
+
+    $default  reduce using rule 29 (Return)
+
+
+State 59
+
+   54 E: E tEGEG . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 79
+
+
+State 60
+
+   56 E: E tINF . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 80
+
+
+State 61
+
+   58 E: E tINFEG . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 81
+
+
+State 62
+
+   55 E: E tSUP . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 82
+
+
+State 63
+
+   57 E: E tSUPEG . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 83
+
+
+State 64
+
+   25 Decl1: tID tEGAL . E
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc  go to state 38
+    E      go to state 84
+
+
+State 65
+
+   21 Decl: tINT DeclX tPVIR .
+
+    $default  reduce using rule 21 (Decl)
+
+
+State 66
+
+   23 DeclX: Decl1 tVIR . DeclX
+
+    tID  shift, and go to state 40
+
+    DeclX  go to state 85
+    Decl1  go to state 42
+
+
+State 67
+
+   38 If: tIF tPO E . tPF $@5 Body $@6 Else
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tPF     shift, and go to state 86
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+
+State 68
+
+   42 While: tWHILE tPO E . tPF $@7 Body
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tPF     shift, and go to state 87
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+
+State 69
+
+   26 Affect: tID tEGAL E . tPVIR
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tPVIR   shift, and go to state 88
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+
+State 70
+
+   28 Invoc: tID tPO $@4 . Params tPF
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    $default  reduce using rule 32 (Params)
+
+    Invoc   go to state 38
+    Params  go to state 89
+    Param   go to state 90
+    E       go to state 91
+
+
+State 71
+
+   43 E: tPO E tPF .
+
+    $default  reduce using rule 43 (E)
+
+
+State 72
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   48  | E tMOINS E .
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tSTAR  shift, and go to state 53
+    tDIV   shift, and go to state 54
+    tMOD   shift, and go to state 55
+
+    $default  reduce using rule 48 (E)
+
+
+State 73
+
+   47 E: E . tPLUS E
+   47  | E tPLUS E .
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tSTAR  shift, and go to state 53
+    tDIV   shift, and go to state 54
+    tMOD   shift, and go to state 55
+
+    $default  reduce using rule 47 (E)
+
+
+State 74
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   49  | E tSTAR E .
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    $default  reduce using rule 49 (E)
+
+
+State 75
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   50  | E tDIV E .
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    $default  reduce using rule 50 (E)
+
+
+State 76
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   53  | E tMOD E .
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    $default  reduce using rule 53 (E)
+
+
+State 77
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   51  | E tOR E .
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+    $default  reduce using rule 51 (E)
+
+
+State 78
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   52  | E tAND E .
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+    $default  reduce using rule 52 (E)
+
+
+State 79
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   54  | E tEGEG E .
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+
+    $default  reduce using rule 54 (E)
+
+
+State 80
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   56  | E tINF E .
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+
+    $default  reduce using rule 56 (E)
+
+
+State 81
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+   58  | E tINFEG E .
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+
+    $default  reduce using rule 58 (E)
+
+
+State 82
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   55  | E tSUP E .
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+
+    $default  reduce using rule 55 (E)
+
+
+State 83
+
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   57  | E tSUPEG E .
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+
+    $default  reduce using rule 57 (E)
+
+
+State 84
+
+   25 Decl1: tID tEGAL E .
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+    $default  reduce using rule 25 (Decl1)
+
+
+State 85
+
+   23 DeclX: Decl1 tVIR DeclX .
+
+    $default  reduce using rule 23 (DeclX)
+
+
+State 86
+
+   38 If: tIF tPO E tPF . $@5 Body $@6 Else
+
+    $default  reduce using rule 36 ($@5)
+
+    $@5  go to state 92
+
+
+State 87
+
+   42 While: tWHILE tPO E tPF . $@7 Body
+
+    $default  reduce using rule 41 ($@7)
+
+    $@7  go to state 93
+
+
+State 88
+
+   26 Affect: tID tEGAL E tPVIR .
+
+    $default  reduce using rule 26 (Affect)
+
+
+State 89
+
+   28 Invoc: tID tPO $@4 Params . tPF
+
+    tPF  shift, and go to state 94
+
+
+State 90
+
+   30 Params: Param .
+   31       | Param . tVIR ParamsNext
+
+    tVIR  shift, and go to state 95
+
+    $default  reduce using rule 30 (Params)
+
+
+State 91
+
+   35 Param: E .
+   47 E: E . tPLUS E
+   48  | E . tMOINS E
+   49  | E . tSTAR E
+   50  | E . tDIV E
+   51  | E . tOR E
+   52  | E . tAND E
+   53  | E . tMOD E
+   54  | E . tEGEG E
+   55  | E . tSUP E
+   56  | E . tINF E
+   57  | E . tSUPEG E
+   58  | E . tINFEG E
+
+    tMOINS  shift, and go to state 51
+    tPLUS   shift, and go to state 52
+    tSTAR   shift, and go to state 53
+    tDIV    shift, and go to state 54
+    tMOD    shift, and go to state 55
+    tOR     shift, and go to state 56
+    tAND    shift, and go to state 57
+    tEGEG   shift, and go to state 59
+    tINF    shift, and go to state 60
+    tINFEG  shift, and go to state 61
+    tSUP    shift, and go to state 62
+    tSUPEG  shift, and go to state 63
+
+    $default  reduce using rule 35 (Param)
+
+
+State 92
+
+   38 If: tIF tPO E tPF $@5 . Body $@6 Else
+
+    tACO  shift, and go to state 18
+
+    Body  go to state 96
+
+
+State 93
+
+   42 While: tWHILE tPO E tPF $@7 . Body
+
+    tACO  shift, and go to state 18
+
+    Body  go to state 97
+
+
+State 94
+
+   28 Invoc: tID tPO $@4 Params tPF .
+
+    $default  reduce using rule 28 (Invoc)
+
+
+State 95
+
+   31 Params: Param tVIR . ParamsNext
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc       go to state 38
+    ParamsNext  go to state 98
+    Param       go to state 99
+    E           go to state 91
+
+
+State 96
+
+   38 If: tIF tPO E tPF $@5 Body . $@6 Else
+
+    $default  reduce using rule 37 ($@6)
+
+    $@6  go to state 100
+
+
+State 97
+
+   42 While: tWHILE tPO E tPF $@7 Body .
+
+    $default  reduce using rule 42 (While)
+
+
+State 98
+
+   31 Params: Param tVIR ParamsNext .
+
+    $default  reduce using rule 31 (Params)
+
+
+State 99
+
+   33 ParamsNext: Param .
+   34           | Param . tVIR ParamsNext
+
+    tVIR  shift, and go to state 101
+
+    $default  reduce using rule 33 (ParamsNext)
+
+
+State 100
+
+   38 If: tIF tPO E tPF $@5 Body $@6 . Else
+
+    tELSE  shift, and go to state 102
+
+    $default  reduce using rule 40 (Else)
+
+    Else  go to state 103
+
+
+State 101
+
+   34 ParamsNext: Param tVIR . ParamsNext
+
+    tNB  shift, and go to state 35
+    tPO  shift, and go to state 36
+    tID  shift, and go to state 37
+
+    Invoc       go to state 38
+    ParamsNext  go to state 104
+    Param       go to state 99
+    E           go to state 91
+
+
+State 102
+
+   39 Else: tELSE . Body
+
+    tACO  shift, and go to state 18
+
+    Body  go to state 105
+
+
+State 103
+
+   38 If: tIF tPO E tPF $@5 Body $@6 Else .
+
+    $default  reduce using rule 38 (If)
+
+
+State 104
+
+   34 ParamsNext: Param tVIR ParamsNext .
+
+    $default  reduce using rule 34 (ParamsNext)
+
+
+State 105
+
+   39 Else: tELSE Body .
+
+    $default  reduce using rule 39 (Else)
