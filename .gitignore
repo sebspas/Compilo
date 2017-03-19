@@ -1,0 +1,6 @@
+*.out
+*.output
+parser
+*.dot
+*.yy.c
+
