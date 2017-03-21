@@ -11,9 +11,9 @@ int instr[1024][4];
 int index_instr = 0;
 int index_mem = 0;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, MOV, JMPR };
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPR, NEG };
 
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "MOV", "JMPR" };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG" };
 
 int tab_instr(int op, int a, int b, int c) {
 
@@ -43,12 +43,16 @@ int affiche_mem(){
 	printf("\n");
 }
 
+#define BP 31
+#define RET 30
 
 int translate(){
 	int i;
-
-	for(i=0; i<index_instr; i++){
-
+	i = 37;
+reg[RET] = index_instr;
+	while (i<index_instr){
+printf("ins @%02d:  ", i);
+		int bp = reg[BP];
 		switch(instr[i][0]) {
 
 			case NOP : 
@@ -58,17 +62,25 @@ int translate(){
 
 			case LOAD : 
 				// LOAD Ri @j
-				reg[instr[i][1]] = mem[instr[i][2]] ;
+				reg[instr[i][1]] = mem[instr[i][2] + bp] ;
 
-				printf("LOAD \tr%d \t@%d \n", instr[i][1], mem[instr[i][2]]);
+				index_mem = instr[i][2] + bp > index_mem ? instr[i][2] + bp : index_mem;
+				printf("LOAD \tr%d \t@%d (value:%d)\n", instr[i][1], instr[i][2], mem[instr[i][2] + bp]);
+				break;
+
+			case NEG : 
+				// NEG Ri
+				reg[instr[i][1]] = ! reg[instr[i][1]] ;
+printf("====\n");
+				printf("NEG \tr%d \t@%d (value:%d)\n", instr[i][1], instr[i][2], mem[instr[i][2] + bp]);
 				break;
 
 			case STORE :
 				// STORE @i Rj
-				mem[instr[i][1]] = reg[instr[i][2]] ;
-				index_mem++;
+				mem[instr[i][1] + bp] = reg[instr[i][2]] ;
+				index_mem = instr[i][1] + bp > index_mem ? instr[i][1] + bp : index_mem;
 
-				printf("STORE \t@%d \tr%d \n", mem[instr[i][1]], instr[i][2]);
+				printf("STORE \t@%d \tr%d (value: %d)\n", instr[i][1], instr[i][2], reg[instr[i][2]]);
 				break; 
 
 			case AFC :
@@ -91,7 +103,7 @@ int translate(){
 				if (instr[i][3] == 42){
 					reg[instr[i][1]] = reg[instr[i][1]] + reg[instr[i][2]];
 
-					printf("ADD \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					printf("ADD \tr%d \tr%d\n", instr[i][1], instr[i][2]);
 				}
 				else{
 					reg[instr[i][1]] = reg[instr[i][2]] + reg[instr[i][3]];
@@ -151,7 +163,6 @@ int translate(){
 
 			case SUP : 
 				// SUP Ri <- 1 si Rj > Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -162,6 +173,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] > reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -172,7 +184,6 @@ int translate(){
 
 			case SUPE : 
 				// SUPE Ri <- 1 si Rj >= Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -183,6 +194,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] >= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -193,7 +205,6 @@ int translate(){
 
 			case INFE : 
 				// INFE Ri <- 1 si Rj <= Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -203,6 +214,7 @@ int translate(){
 					printf("INFE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
+					reg[instr[i][1]] = 0; //par defaut
 
 					if (reg[instr[i][2]] <= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
@@ -214,7 +226,6 @@ int translate(){
 
 			case EQU : 
 				// EQU Ri <- 1 si Rj == Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -225,6 +236,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] == reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -267,35 +279,37 @@ int translate(){
 			case JMPC : 
 				// JMPC @i Ri si Ri != 0
 
+				printf("JMPC \t@%d \tr%d ?\n", instr[i][1], instr[i][2]);
 				if (reg[instr[i][2]] != 0){
-						printf("saut à l'@ %d", mem[instr[i][1]]);
+						printf("saut à l'@ %d\n", instr[i][1]);
+						i = instr[i][1] - 1;
 				}
 
-				printf("JMPC \t@%d \tr%d \n", mem[instr[i][1]], instr[i][2]);
 				break;
 
 			case JMP : 
 				// JMP @i
 
-				printf("JMP \t%d \n", mem[instr[i][1]]);
-				break;
+				printf("JMP \t@%d \n", instr[i][1]);
+				i = instr[i][1] - 1;
 
-			case MOV : 
-				// PAREIL QUE COP!!
-				// A VIRER !!
 
+printf("MEM BEFORE JMP:\n");
+affiche_mem();
 				break;
 
 			case JMPR :
 				// JMPR Ri 
 				// saut a l'@ mem contenu dans le registre Ri
 
-				printf("JMPR \tr%d \n", instr[i][1]);
+				printf("JMPR \tr%d (value: %d)\n", instr[i][1], reg[instr[i][1]]);
+				i = reg[instr[i][1]] - 1;
 				break;
 
 			default:
 				printf("OP non reconnue \n");
 		}
+		i++;
 	}
 
 }
@@ -303,7 +317,7 @@ int translate(){
 %}
 %union { int nb; char var[16]; }
 %token tNOP tLOAD tSTORE tAFC tCOP tADD tSUB tMUL tDIV tSUP
-%token tSUPE tINFE tEQU tOR tAND tINF tJMPC tJMP tMOV tJMPR
+%token tSUPE tINFE tEQU tOR tAND tINF tJMPC tJMP tJMPR tNEG
 %token <nb> tNB
 %token <var> tID
 
@@ -321,7 +335,7 @@ Asm :	ListeInstr ;
 
 ListeInstr :	Instr | Instr ListeInstr ;
 
-Instr :		NOP | LOAD | STORE | AFC | COP | ADD | SUB | MUL | DIV | SUP | SUPE | INFE | EQU | OR | AND | INF | JMPC | JMP | MOV | JMPR ;
+Instr :		NOP | LOAD | STORE | AFC | COP | ADD | SUB | MUL | DIV | SUP | SUPE | INFE | EQU | OR | AND | INF | JMPC | JMP | JMPR | NEG ;
 
 NOP : 		tNOP ;
 
@@ -359,9 +373,9 @@ JMPC : 		tJMPC tNB tNB tNB { tab_instr(JMPC, $2, $3, $4); } ;
 
 JMP : 		tJMP tNB tNB tNB { tab_instr(JMP, $2, $3, $4); } ;
 
-MOV : 		tMOV tNB tNB tNB { tab_instr(MOV, $2, $3, $4); } ;
-
 JMPR : 		tJMPR tNB tNB tNB { tab_instr(JMPR, $2, $3, $4); } ;
+
+NEG : 		tNEG tNB tNB tNB { tab_instr(NEG, $2, $3, $4); } ;
 
 
 %%

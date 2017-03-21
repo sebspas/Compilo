@@ -5,5 +5,5 @@ int h(int res, int a) {
 }
 
 int main() {
-	h(1, 5);
+	h(5);
 }

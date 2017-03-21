@@ -29,7 +29,7 @@ int add_symb(char name[SIZE_NAME], int type, char init, int depth) {
 int remove_depth(int depth) {
     int i = SP;
 
-    while(i > 0 && table[i - 1].depth == depth) {
+    while(i > 0 && table[i].depth == depth) {
         i--;
     }
 

@@ -76,9 +76,9 @@ int instr[1024][4];
 int index_instr = 0;
 int index_mem = 0;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, MOV, JMPR };
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPR, NEG };
 
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "MOV", "JMPR" };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG" };
 
 int tab_instr(int op, int a, int b, int c) {
 
@@ -102,18 +102,22 @@ int affiche_reg(){
 int affiche_mem(){
 	int i;
 	printf("TAB_MEM\n");
-	for(i=0; i<index_mem; i++){
+	for(i=0; i<=index_mem; i++){
 		printf("@%d \t%d \n", i, mem[i]);
 	}
 	printf("\n");
 }
 
+#define BP 31
+#define RET 30
 
 int translate(){
 	int i;
-
-	for(i=0; i<index_instr; i++){
-
+	i = 37;
+reg[RET] = index_instr;
+	while (i<index_instr){
+printf("ins @%02d:  ", i);
+		int bp = reg[BP];
 		switch(instr[i][0]) {
 
 			case NOP : 
@@ -123,17 +127,25 @@ int translate(){
 
 			case LOAD : 
 				// LOAD Ri @j
-				reg[instr[i][1]] = mem[instr[i][2]] ;
+				reg[instr[i][1]] = mem[instr[i][2] + bp] ;
 
-				printf("LOAD \tr%d \t@%d \n", instr[i][1], mem[instr[i][2]]);
+				index_mem = instr[i][2] + bp > index_mem ? instr[i][2] + bp : index_mem;
+				printf("LOAD \tr%d \t@%d (value:%d)\n", instr[i][1], instr[i][2], mem[instr[i][2] + bp]);
+				break;
+
+			case NEG : 
+				// NEG Ri
+				reg[instr[i][1]] = ! reg[instr[i][1]] ;
+printf("====\n");
+				printf("NEG \tr%d \t@%d (value:%d)\n", instr[i][1], instr[i][2], mem[instr[i][2] + bp]);
 				break;
 
 			case STORE :
 				// STORE @i Rj
-				mem[instr[i][1]] = reg[instr[i][2]] ;
-				index_mem++;
+				mem[instr[i][1] + bp] = reg[instr[i][2]] ;
+				index_mem = instr[i][1] + bp > index_mem ? instr[i][1] + bp : index_mem;
 
-				printf("STORE \t@%d \tr%d \n", mem[instr[i][1]], instr[i][2]);
+				printf("STORE \t@%d \tr%d (value: %d)\n", instr[i][1], instr[i][2], reg[instr[i][2]]);
 				break; 
 
 			case AFC :
@@ -156,7 +168,7 @@ int translate(){
 				if (instr[i][3] == 42){
 					reg[instr[i][1]] = reg[instr[i][1]] + reg[instr[i][2]];
 
-					printf("ADD \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					printf("ADD \tr%d \tr%d\n", instr[i][1], instr[i][2]);
 				}
 				else{
 					reg[instr[i][1]] = reg[instr[i][2]] + reg[instr[i][3]];
@@ -216,7 +228,6 @@ int translate(){
 
 			case SUP : 
 				// SUP Ri <- 1 si Rj > Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -227,6 +238,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] > reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -237,7 +249,6 @@ int translate(){
 
 			case SUPE : 
 				// SUPE Ri <- 1 si Rj >= Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -248,6 +259,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] >= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -258,7 +270,6 @@ int translate(){
 
 			case INFE : 
 				// INFE Ri <- 1 si Rj <= Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -268,6 +279,7 @@ int translate(){
 					printf("INFE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
+					reg[instr[i][1]] = 0; //par defaut
 
 					if (reg[instr[i][2]] <= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
@@ -279,7 +291,6 @@ int translate(){
 
 			case EQU : 
 				// EQU Ri <- 1 si Rj == Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
 
@@ -290,6 +301,7 @@ int translate(){
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] == reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
@@ -332,41 +344,43 @@ int translate(){
 			case JMPC : 
 				// JMPC @i Ri si Ri != 0
 
+				printf("JMPC \t@%d \tr%d ?\n", instr[i][1], instr[i][2]);
 				if (reg[instr[i][2]] != 0){
-						printf("saut à l'@ %d", mem[instr[i][1]]);
+						printf("saut à l'@ %d\n", instr[i][1]);
+						i = instr[i][1] - 1;
 				}
 
-				printf("JMPC \t@%d \tr%d \n", mem[instr[i][1]], instr[i][2]);
 				break;
 
 			case JMP : 
 				// JMP @i
 
-				printf("JMP \t%d \n", mem[instr[i][1]]);
-				break;
+				printf("JMP \t@%d \n", instr[i][1]);
+				i = instr[i][1] - 1;
 
-			case MOV : 
-				// PAREIL QUE COP!!
-				// A VIRER !!
 
+printf("MEM BEFORE JMP:\n");
+affiche_mem();
 				break;
 
 			case JMPR :
 				// JMPR Ri 
 				// saut a l'@ mem contenu dans le registre Ri
 
-				printf("JMPR \tr%d \n", instr[i][1]);
+				printf("JMPR \tr%d (value: %d)\n", instr[i][1], reg[instr[i][1]]);
+				i = reg[instr[i][1]] - 1;
 				break;
 
 			default:
 				printf("OP non reconnue \n");
 		}
+		i++;
 	}
 
 }
 
 
-#line 370 "y.tab.c" /* yacc.c:339  */
+#line 384 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -419,8 +433,8 @@ extern int yydebug;
     tINF = 273,
     tJMPC = 274,
     tJMP = 275,
-    tMOV = 276,
-    tJMPR = 277,
+    tJMPR = 276,
+    tNEG = 277,
     tNB = 278,
     tID = 279,
     tEGAL = 280,
@@ -454,8 +468,8 @@ extern int yydebug;
 #define tINF 273
 #define tJMPC 274
 #define tJMP 275
-#define tMOV 276
-#define tJMPR 277
+#define tJMPR 276
+#define tNEG 277
 #define tNB 278
 #define tID 279
 #define tEGAL 280
@@ -474,10 +488,10 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 304 "interpretor.y" /* yacc.c:355  */
+#line 318 "interpretor.y" /* yacc.c:355  */
  int nb; char var[16]; 
 
-#line 481 "y.tab.c" /* yacc.c:355  */
+#line 495 "y.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -492,7 +506,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 496 "y.tab.c" /* yacc.c:358  */
+#line 510 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -792,11 +806,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   320,   320,   322,   322,   324,   324,   324,   324,   324,
-     324,   324,   324,   324,   324,   324,   324,   324,   324,   324,
-     324,   324,   324,   324,   324,   326,   328,   330,   332,   334,
-     336,   338,   340,   342,   344,   346,   348,   350,   352,   354,
-     356,   358,   360,   362,   364
+       0,   334,   334,   336,   336,   338,   338,   338,   338,   338,
+     338,   338,   338,   338,   338,   338,   338,   338,   338,   338,
+     338,   338,   338,   338,   338,   340,   342,   344,   346,   348,
+     350,   352,   354,   356,   358,   360,   362,   364,   366,   368,
+     370,   372,   374,   376,   378
 };
 #endif
 
@@ -807,11 +821,11 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "tNOP", "tLOAD", "tSTORE", "tAFC",
   "tCOP", "tADD", "tSUB", "tMUL", "tDIV", "tSUP", "tSUPE", "tINFE", "tEQU",
-  "tOR", "tAND", "tINF", "tJMPC", "tJMP", "tMOV", "tJMPR", "tNB", "tID",
+  "tOR", "tAND", "tINF", "tJMPC", "tJMP", "tJMPR", "tNEG", "tNB", "tID",
   "tEGAL", "tINFEG", "tSUPEG", "tEGEG", "tPLUS", "tMOINS", "tSTAR", "tMOD",
   "tP0", "tPF", "$accept", "Asm", "ListeInstr", "Instr", "NOP", "LOAD",
   "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE",
-  "EQU", "OR", "AND", "INF", "JMPC", "JMP", "MOV", "JMPR", YY_NULLPTR
+  "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG", YY_NULLPTR
 };
 #endif
 
@@ -1626,121 +1640,121 @@ yyreduce:
   switch (yyn)
     {
         case 26:
-#line 328 "interpretor.y" /* yacc.c:1646  */
+#line 342 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(LOAD, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1632 "y.tab.c" /* yacc.c:1646  */
+#line 1646 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 330 "interpretor.y" /* yacc.c:1646  */
+#line 344 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(STORE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1638 "y.tab.c" /* yacc.c:1646  */
+#line 1652 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 332 "interpretor.y" /* yacc.c:1646  */
+#line 346 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(AFC, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1644 "y.tab.c" /* yacc.c:1646  */
+#line 1658 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 334 "interpretor.y" /* yacc.c:1646  */
+#line 348 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(COP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1650 "y.tab.c" /* yacc.c:1646  */
+#line 1664 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 336 "interpretor.y" /* yacc.c:1646  */
+#line 350 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(ADD, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1656 "y.tab.c" /* yacc.c:1646  */
+#line 1670 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 338 "interpretor.y" /* yacc.c:1646  */
+#line 352 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUB, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1662 "y.tab.c" /* yacc.c:1646  */
+#line 1676 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 340 "interpretor.y" /* yacc.c:1646  */
+#line 354 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(MUL, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1668 "y.tab.c" /* yacc.c:1646  */
+#line 1682 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 342 "interpretor.y" /* yacc.c:1646  */
+#line 356 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(DIV, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1674 "y.tab.c" /* yacc.c:1646  */
+#line 1688 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 344 "interpretor.y" /* yacc.c:1646  */
+#line 358 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1680 "y.tab.c" /* yacc.c:1646  */
+#line 1694 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 346 "interpretor.y" /* yacc.c:1646  */
+#line 360 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUPE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1686 "y.tab.c" /* yacc.c:1646  */
+#line 1700 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 348 "interpretor.y" /* yacc.c:1646  */
+#line 362 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(INFE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1692 "y.tab.c" /* yacc.c:1646  */
+#line 1706 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 350 "interpretor.y" /* yacc.c:1646  */
+#line 364 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(EQU, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1698 "y.tab.c" /* yacc.c:1646  */
+#line 1712 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 352 "interpretor.y" /* yacc.c:1646  */
+#line 366 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(OR, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1704 "y.tab.c" /* yacc.c:1646  */
+#line 1718 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 354 "interpretor.y" /* yacc.c:1646  */
+#line 368 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(AND, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1710 "y.tab.c" /* yacc.c:1646  */
+#line 1724 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 356 "interpretor.y" /* yacc.c:1646  */
+#line 370 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(INF, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1716 "y.tab.c" /* yacc.c:1646  */
+#line 1730 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 358 "interpretor.y" /* yacc.c:1646  */
+#line 372 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(JMPC, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1722 "y.tab.c" /* yacc.c:1646  */
+#line 1736 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 360 "interpretor.y" /* yacc.c:1646  */
+#line 374 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(JMP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1728 "y.tab.c" /* yacc.c:1646  */
+#line 1742 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 362 "interpretor.y" /* yacc.c:1646  */
-    { tab_instr(MOV, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1734 "y.tab.c" /* yacc.c:1646  */
+#line 376 "interpretor.y" /* yacc.c:1646  */
+    { tab_instr(JMPR, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
+#line 1748 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 364 "interpretor.y" /* yacc.c:1646  */
-    { tab_instr(JMPR, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1740 "y.tab.c" /* yacc.c:1646  */
+#line 378 "interpretor.y" /* yacc.c:1646  */
+    { tab_instr(NEG, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
+#line 1754 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1744 "y.tab.c" /* yacc.c:1646  */
+#line 1758 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1968,7 +1982,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 367 "interpretor.y" /* yacc.c:1906  */
+#line 381 "interpretor.y" /* yacc.c:1906  */
 
 void yyerror(char *s) { fprintf(stderr , "%s\n", s); }
 

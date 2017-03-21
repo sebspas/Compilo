@@ -85,7 +85,7 @@ printf("debut de fonction:\n");print();
 }
 
 tPO Args tPF {
-                    add_symb("@prev_ret", TYPE_INT, IS_INIT, current_depth+1);
+                    add_symb("@prev_ret", TYPE_INT, IS_INIT, current_depth);
 printf("add fun: %s %d\n", $2, index_instr);
               add_func($2, index_instr); 
           } Body { op_instr(JMPR, ADR_RET, 42, 42); };

@@ -18,7 +18,7 @@ int get_adr_func(char name[SIZE_NAME_FUNC]) {
 	}
 
 	fprintf(stderr, "Function not exist.\n");
-    	exit(2);
+    exit(2);
 	return -1;
 }
 

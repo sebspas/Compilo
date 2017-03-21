@@ -63,8 +63,8 @@ extern int yydebug;
     tINF = 273,
     tJMPC = 274,
     tJMP = 275,
-    tMOV = 276,
-    tJMPR = 277,
+    tJMPR = 276,
+    tNEG = 277,
     tNB = 278,
     tID = 279,
     tEGAL = 280,
@@ -98,8 +98,8 @@ extern int yydebug;
 #define tINF 273
 #define tJMPC 274
 #define tJMP 275
-#define tMOV 276
-#define tJMPR 277
+#define tJMPR 276
+#define tNEG 277
 #define tNB 278
 #define tID 279
 #define tEGAL 280
@@ -118,7 +118,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 304 "interpretor.y" /* yacc.c:1909  */
+#line 318 "interpretor.y" /* yacc.c:1909  */
  int nb; char var[16]; 
 
 #line 125 "y.tab.h" /* yacc.c:1909  */

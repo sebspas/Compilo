@@ -34,8 +34,8 @@ id [a-zA-Z]+[0-9]*
 "INF"		return tINF;
 "JMPC"		return tJMPC;
 "JMP"		return tJMP;
-"MOV"		return tMOV;
 "JMPR"		return tJMPR;
+"NEG"		return tNEG;
 
 {id} {
     if (strlen(yytext) >= sizeof(yylval.var)-1 ){
