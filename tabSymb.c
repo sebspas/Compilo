@@ -50,7 +50,7 @@ int remove_var() {
 int get_index_by_name(char name[SIZE_NAME]) {
     int i = SP-1;
 
-    for ( ; i >= 0; i-- ) {
+    for ( ; i >= 0; --i) {
         if (strcmp(table[i].name, name) == 0) {
             return i;
         }
@@ -111,13 +111,14 @@ int check_not_init(int index) {
 }
 
 int print() {
-    printf("TAB_SYMB\n");
     int i = 0;
-
+    printf("===============TAB_SYMBOLES=============\n");
+    printf("@ \tNom \tProfondeur\t \n");
     for (; i < SP; ++i)
     {
-      printf("%d %s %d \n", i, table[i].name, table[i].depth);
+      printf("%d \t%s \t%d \n", i, table[i].name, table[i].depth);
     }
+    printf("========================================\n");
     return 0;
 }
 

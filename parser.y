@@ -6,12 +6,16 @@
 #include "error.h"
 #define TYPE_INT 1
 
+#define VRet 29
+#define ADR_RET 30
+#define BP 31
+
 int var[26];
 void yyerror(char *s);
 int current_depth = 0;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, MOV };
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "MOV"};
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, JMPR };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "JMPR"};
 
 int instr[1024][4];
 int index_instr = 0;
@@ -70,15 +74,13 @@ void affiche_instrs() {
 %left tSTAR tDIV tMOD
 %left tP0 tPF
 
-%type <nb> E
+%type <nb> E Params ParamsNext
 %start Prg
 %%
 Prg :        Fonction Prg | ;
-Fonction :    tINT tID { 
-                    /*add_symb("@ret", TYPE_INT, IS_INIT, current_depth);*/
-             } tPO Args tPF {
+Fonction :    tINT tID tPO Args tPF {
               add_func($2, index_instr); 
-          } Body { /*printf("===== FONCTION ====\n");*/ };
+          } Body { op_instr(JMPR, ADR_RET, 42, 42); };
 
 Args :        Arg ListeArgs | { /*printf("Arg vide\n");*/};
 ListeArgs :    tVIR Arg ListeArgs | ;
@@ -110,53 +112,28 @@ Affect :        tID tEGAL E tPVIR {
                     affect_instr($3, index);
                 };
 
-Invoc :         tID tPO {
-                    /*int lr = add_symb("@ret_invoke", TYPE_INT, IS_INIT, current_depth); 
-                    op_instr(AFC, 0, -1, 42);
-                    op_instr(STORE, lr, 0, 42); 
-                    $2 = index_instr - 2;*/
-
-                }
-                Params tPF { 
+Invoc :         tID tPO Params tPF { 
                     // on ajoute la valeur de retour
-                    int adr_ret = add_symb("@ret", TYPE_INT, IS_INIT, current_depth);
+                    int adr_ret = add_symb("@old_ret", TYPE_INT, IS_INIT, current_depth);
                     // on retourne après le JMP vers la fonction
-                    op_instr(STORE, adr_ret, index_instr + 1, 42);
+                    op_instr(STORE, adr_ret, 30, 42);
 
-                    // sauvegarde de BP
-                    int adr_BP = add_symb("BP", TYPE_INT, IS_INIT, current_depth);
                     // on le met dans la memoire
-                    op_instr(STORE, adr_BP, 31, 42);
+                    op_instr(ADD, BP, get_SP() - $3, 42);
 
-                    // on met a jour notre BP
-                    op_instr(AFC, 31, get_SP()+1, 42);
+                    // pour indiquer à la fonction invoquée où elle doit retourné
+                    op_instr(AFC, ADR_RET, index_instr + 2, 42);
 
                     // on récupère l'addresse de la fonction ou l'on veut jump
                     int adr_f = get_adr_func($1);
-                    // on load l'adr de la fonction
-                    op_instr(LOAD, 0, adr_f, 42);
                     // on JMP a la fonction
-                    op_instr(JMP, 0, 42, 42);
+                    op_instr(JMP, adr_f, 42, 42);
 
-                    // on part de la fin de la table des symb et on récupère le BP le plus récent
-                    int adr_old_BP = get_index_by_name("BP");
-                    // on charge la valeur à l'adr adr_old_BP dans R7
-                    op_instr(LOAD, 7, adr_old_BP, 42);
-                    // on fait BP = old_BP
-                    op_instr(MOV, 31, 7, 42);
+                    // on remet BP à la bonne valeur
+                    op_instr(SUB, BP, get_SP() - $3, 42);
 
-
-                    /*
-                    // @ret -> doit être a l'instr qui suit le JMP
-                    $2 = index_instr + 2;
-                    op_instr(STORE, get_index_by_name("@ret"), index_instr + 3, 42);
-                    // bp
-                    op_instr(LOAD, 0, adr_f, 42);
-                    op_instr(JMP, 0, 42, 42);
-                    // correction de l instr q $2 avec index_instr
-                    set_afc();
-                    // depiler les parametres !!!!
-                    // bp corriger*/
+                    // on charge l'ancienne valeur de retour
+                    op_instr(LOAD, ADR_RET, adr_ret, 42);
             };
 
 Return : tRETURN E tPVIR { 
@@ -164,24 +141,15 @@ Return : tRETURN E tPVIR {
             printf("return\n"); 
             print(); 
 
-            // on met la valeur de retour dans r0
-            op_instr(LOAD, 0, $2, 42);
-            // on charge BP dans un autre registre R7
-            op_instr(MOV, 7, 31, 42);
-            // on met 2 dans un registre pour le SUB
-            op_instr(AFC, 8, 2, 42);
-            // on enlève 2 pour remonter à l'adr de ret
-            op_instr(SUB, 7, 8, 42);
-            // on jmp a cette addresse
-            op_instr(JMPI, 7, 42, 42);
+            // on met la valeur de retour dans r29
+            op_instr(LOAD, VRet, $2, 42);
 
-            /*op_instr(LOAD, 0, $2, 42); 
-            op_instr(LOAD, 1, get_index_by_name("@ret"), 42); 
-            op_instr(JMPI, 1, 42, 42); */
+            // on jmp a cette addresse
+            op_instr(JMPR, ADR_RET, 42, 42);
 };
 
-Params :        Param | Param tVIR ParamsNext | ;
-ParamsNext :    Param | Param tVIR ParamsNext;
+Params :        Param { $$ = 1; } | Param tVIR ParamsNext { $$ = 1 + $3; } | { $$ = 0; } ;
+ParamsNext :    Param { $$ = 1; } | Param tVIR ParamsNext { $$ = 1 + $3; };
 Param :    E;
 
 If :    tIF tPO E tPF { 
