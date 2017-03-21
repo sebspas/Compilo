@@ -1,0 +1,12 @@
+all: lex yacc
+	gcc lex.yy.c -ll -o interpretor
+
+lex: interpretor.l
+	flex interpretor.l
+
+yacc: interpretor.y 
+	yacc -dv interpretor.y
+
+clean:
+	rm lex.yy.c
+	rm interpretor

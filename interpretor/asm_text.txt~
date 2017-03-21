@@ -1,0 +1,15 @@
+TAB_SYMB
+0 _ 1 
+1 a 1 
+AFC 	1 	2 	0 
+LOAD 	0 	1 	42 
+STORE 	2 	0 	42 
+COP 	3 	1 	0 
+AFC 	4 	3 	0 
+LOAD 	0 	3 	42 
+LOAD 	1 	4 	42 
+ADD 	0 	1 	42 
+STORE 	3 	0 	42 
+LOAD 	0 	3 	42 
+STORE 	1 	0 	42 
+AFC 	4 	123 	0 
