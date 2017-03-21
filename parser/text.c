@@ -1,9 +1,13 @@
-int h(int res, int a) {
-	if (a > 0) {
-		h(res * a, a - 1);
-	} 
+int fib(int n){
+  if (n < 2) {
+  	return n;
+  }
+  else {
+	return fib(n-1) + fib(n-2);
+  }
 }
 
 int main() {
-	h(1, 5);
+	int a;
+	a = fib(15);
 }

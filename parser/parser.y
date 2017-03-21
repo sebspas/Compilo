@@ -52,7 +52,7 @@ int affect_instr(int b, int c) {
 }
 
 void affiche_instrs() {
-    printf(ANSI_COLOR_GREEN "Compilation terminé avec " ANSI_COLOR_RESET " " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " errors.\n", get_NB_ERROR());
+    fprintf(stderr, ANSI_COLOR_GREEN "Compilation terminé avec " ANSI_COLOR_RESET " " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " errors.\n", get_NB_ERROR());
 
     int i;
     for(i = 0; i < index_instr; i++) {
@@ -80,14 +80,15 @@ void affiche_instrs() {
 Prg :        Fonction Prg | ;
 Fonction :    tINT tID {
 
-printf("debut de fonction:\n");print();
+    //printf("debut de fonction:\n");print();
 
 }
 
 tPO Args tPF {
-                    add_symb("@prev_ret", TYPE_INT, IS_INIT, current_depth+1);
-printf("add fun: %s %d\n", $2, index_instr);
-              add_func($2, index_instr); 
+                // réserver de la place pour l'adr de retour
+                add_symb("@prev_ret", TYPE_INT, IS_INIT, current_depth+1);
+                //printf("add fun: %s %d\n", $2, index_instr);
+                add_func($2, index_instr); 
           } Body { op_instr(JMPR, ADR_RET, 42, 42); };
 
 Args :        Arg ListeArgs | { /*printf("Arg vide\n");*/};
@@ -124,8 +125,8 @@ Invoc :         tID tPO Params tPF {
                     // on ajoute la valeur de retour
                     int adr_ret = add_symb("@old_ret", TYPE_INT, IS_INIT, current_depth);
                     // on retourne après le JMP vers la fonction
-printf("TS in invoc:\n");
-print();
+                    //printf("TS in invoc:\n");
+                    //print();
                     op_instr(STORE, adr_ret, 30, 42);
 
                     // on le met dans la memoire
@@ -150,8 +151,8 @@ print();
 
 Return : tRETURN E tPVIR { 
             remove_var();
-            printf("return\n"); 
-            print(); 
+            //printf("return\n"); 
+            //print(); 
 
             // on met la valeur de retour dans r29
             op_instr(LOAD, VRet, $2, 42);
@@ -191,8 +192,8 @@ E :     tPO E tPF {
          }
         | tNB { 
                 int pos = add_symb("_", TYPE_INT, IS_INIT, current_depth);
-                op_instr(AFC, 0, $1, 0);
-                op_instr(STORE, pos, 0, 0);
+                op_instr(AFC, 0, $1, 42);
+                op_instr(STORE, pos, 0, 42);
                 $$ = pos;
          }
         | tID { 
@@ -202,12 +203,13 @@ E :     tPO E tPF {
                 check_not_init(index);
 
                 int pos = add_symb("_", TYPE_INT, IS_INIT, current_depth);
-                op_instr(LOAD, 0, index, 0);
-                op_instr(STORE, pos, 0, 0);
+                op_instr(LOAD, 0, index, 42);
+                op_instr(STORE, pos, 0, 42);
                 $$ = pos;
          } 
         | Invoc { 
                 int pos = add_symb("_", TYPE_INT, IS_INIT, current_depth);
+                op_instr(STORE, pos, 29, 42);
                 $$ = pos;
          }
         | E tPLUS E     { $$ = op_arith(ADD, $1, $3); }

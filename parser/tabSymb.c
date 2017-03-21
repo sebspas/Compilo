@@ -75,7 +75,7 @@ int check_exist(char name[SIZE_NAME], int depth) {
     {
         if (strcmp(table[i].name, name) == 0 && table[i].depth == depth) {
 
-            printf(ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " already exists at this depth.\n", name);
+            fprintf(stderr, ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " already exists at this depth.\n", name);
             NB_ERROR++;
             //exit(2);
         }
@@ -102,7 +102,7 @@ int check_not_exist(char name[SIZE_NAME]) {
 
 int check_not_init(int index) {
     if (table[index].init == IS_NOT_INIT) {
-        printf(ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " not init.\n", table[index].name);
+        fprintf(stderr, ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " not init.\n", table[index].name);
         NB_ERROR++;
         //exit(2);
     }
@@ -112,13 +112,13 @@ int check_not_init(int index) {
 
 int print() {
     int i = 0;
-    printf("===============TAB_SYMBOLES=============\n");
-    printf("@ \tNom \tProfondeur\t \n");
+    fprintf(stderr, "===============TAB_SYMBOLES=============\n");
+    fprintf(stderr, "@ \tNom \tProfondeur\t \n");
     for (; i < SP; ++i)
     {
-      printf("%d \t%s \t%d \n", i, table[i].name, table[i].depth);
+      fprintf(stderr, "%d \t%s \t%d \n", i, table[i].name, table[i].depth);
     }
-    printf("========================================\n");
+    fprintf(stderr, "========================================\n");
     return 0;
 }
 
