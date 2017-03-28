@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.0.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -112,11 +112,10 @@ int affiche_mem(){
 #define RET 30
 
 int translate(){
-	int i;
-	i = 37;
-reg[RET] = index_instr;
+	int i = 0;
+	reg[RET] = index_instr;
 	while (i<index_instr){
-printf("ins @%02d:  ", i);
+		printf("ins @%02d:  ", i);
 		int bp = reg[BP];
 		switch(instr[i][0]) {
 
@@ -233,7 +232,10 @@ printf("====\n");
 
 					if (reg[instr[i][1]] > reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par default
 					}
+					
 					printf("SUP \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
@@ -254,8 +256,11 @@ printf("====\n");
 
 					if (reg[instr[i][1]] >= reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par default
 					}
-					printf("SUPE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					
+					printf("SUP \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
 
@@ -263,28 +268,29 @@ printf("====\n");
 					if (reg[instr[i][2]] >= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
-					printf("SUPE \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
+					printf("SUP \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
 				}
 
 				break;
-
 			case INFE : 
 				// INFE Ri <- 1 si Rj <= Rk; 0 sinon
 
 				if (instr[i][3] == 42){
-
+					
 					if (reg[instr[i][1]] <= reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par defaut
 					}
-					printf("INFE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					printf("INF \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
-					reg[instr[i][1]] = 0; //par defaut
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] <= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
-					printf("INFE \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
+					printf("INF \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
 				}
 
 				break;
@@ -322,22 +328,24 @@ printf("====\n");
 
 			case INF :
 				// INF Ri <- 1 si Rj < Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
-
+					
 					if (reg[instr[i][1]] < reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par defaut
 					}
 					printf("INF \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] < reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
 					printf("INF \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
-				} 
+				}
 
 				break;
 
@@ -380,7 +388,7 @@ affiche_mem();
 }
 
 
-#line 384 "y.tab.c" /* yacc.c:339  */
+#line 392 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -485,14 +493,16 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
-#line 318 "interpretor.y" /* yacc.c:355  */
+#line 326 "interpretor.y" /* yacc.c:355  */
  int nb; char var[16]; 
 
-#line 495 "y.tab.c" /* yacc.c:355  */
+#line 503 "y.tab.c" /* yacc.c:355  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -506,7 +516,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 510 "y.tab.c" /* yacc.c:358  */
+#line 520 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -806,11 +816,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   334,   334,   336,   336,   338,   338,   338,   338,   338,
-     338,   338,   338,   338,   338,   338,   338,   338,   338,   338,
-     338,   338,   338,   338,   338,   340,   342,   344,   346,   348,
-     350,   352,   354,   356,   358,   360,   362,   364,   366,   368,
-     370,   372,   374,   376,   378
+       0,   342,   342,   344,   344,   346,   346,   346,   346,   346,
+     346,   346,   346,   346,   346,   346,   346,   346,   346,   346,
+     346,   346,   346,   346,   346,   348,   350,   352,   354,   356,
+     358,   360,   362,   364,   366,   368,   370,   372,   374,   376,
+     378,   380,   382,   384,   386
 };
 #endif
 
@@ -1640,121 +1650,121 @@ yyreduce:
   switch (yyn)
     {
         case 26:
-#line 342 "interpretor.y" /* yacc.c:1646  */
+#line 350 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(LOAD, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1646 "y.tab.c" /* yacc.c:1646  */
+#line 1656 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 344 "interpretor.y" /* yacc.c:1646  */
+#line 352 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(STORE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1652 "y.tab.c" /* yacc.c:1646  */
+#line 1662 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 346 "interpretor.y" /* yacc.c:1646  */
+#line 354 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(AFC, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1658 "y.tab.c" /* yacc.c:1646  */
+#line 1668 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 348 "interpretor.y" /* yacc.c:1646  */
+#line 356 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(COP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1664 "y.tab.c" /* yacc.c:1646  */
+#line 1674 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 350 "interpretor.y" /* yacc.c:1646  */
+#line 358 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(ADD, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1670 "y.tab.c" /* yacc.c:1646  */
+#line 1680 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 352 "interpretor.y" /* yacc.c:1646  */
+#line 360 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUB, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1676 "y.tab.c" /* yacc.c:1646  */
+#line 1686 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 354 "interpretor.y" /* yacc.c:1646  */
+#line 362 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(MUL, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1682 "y.tab.c" /* yacc.c:1646  */
+#line 1692 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 356 "interpretor.y" /* yacc.c:1646  */
+#line 364 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(DIV, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1688 "y.tab.c" /* yacc.c:1646  */
+#line 1698 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 358 "interpretor.y" /* yacc.c:1646  */
+#line 366 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1694 "y.tab.c" /* yacc.c:1646  */
+#line 1704 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 360 "interpretor.y" /* yacc.c:1646  */
+#line 368 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(SUPE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1700 "y.tab.c" /* yacc.c:1646  */
+#line 1710 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 362 "interpretor.y" /* yacc.c:1646  */
+#line 370 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(INFE, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1706 "y.tab.c" /* yacc.c:1646  */
+#line 1716 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 364 "interpretor.y" /* yacc.c:1646  */
+#line 372 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(EQU, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1712 "y.tab.c" /* yacc.c:1646  */
+#line 1722 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 366 "interpretor.y" /* yacc.c:1646  */
+#line 374 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(OR, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1718 "y.tab.c" /* yacc.c:1646  */
+#line 1728 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 368 "interpretor.y" /* yacc.c:1646  */
+#line 376 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(AND, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1724 "y.tab.c" /* yacc.c:1646  */
+#line 1734 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 370 "interpretor.y" /* yacc.c:1646  */
+#line 378 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(INF, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1730 "y.tab.c" /* yacc.c:1646  */
+#line 1740 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 372 "interpretor.y" /* yacc.c:1646  */
+#line 380 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(JMPC, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1736 "y.tab.c" /* yacc.c:1646  */
+#line 1746 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 374 "interpretor.y" /* yacc.c:1646  */
+#line 382 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(JMP, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1742 "y.tab.c" /* yacc.c:1646  */
+#line 1752 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 376 "interpretor.y" /* yacc.c:1646  */
+#line 384 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(JMPR, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1748 "y.tab.c" /* yacc.c:1646  */
+#line 1758 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 378 "interpretor.y" /* yacc.c:1646  */
+#line 386 "interpretor.y" /* yacc.c:1646  */
     { tab_instr(NEG, (yyvsp[-2].nb), (yyvsp[-1].nb), (yyvsp[0].nb)); }
-#line 1754 "y.tab.c" /* yacc.c:1646  */
+#line 1764 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1758 "y.tab.c" /* yacc.c:1646  */
+#line 1768 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1982,7 +1992,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 381 "interpretor.y" /* yacc.c:1906  */
+#line 389 "interpretor.y" /* yacc.c:1906  */
 
 void yyerror(char *s) { fprintf(stderr , "%s\n", s); }
 

@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include "error.h"
 
+extern void yyerror(const char *s);
+
 symb table[MAX_SIZE];
 
 int SP = 0;
-
-int NB_ERROR = 0;
 
 /**
     Empile l'element dans la pile
@@ -19,7 +19,6 @@ int add_symb(char name[SIZE_NAME], int type, char init, int depth) {
     table[SP].type = type;
     table[SP].init = init;
     table[SP].depth = depth;
-    
     return SP++;
 }
 
@@ -28,15 +27,10 @@ int add_symb(char name[SIZE_NAME], int type, char init, int depth) {
 */
 int remove_depth(int depth) {
     int i = SP;
-
     while(i > 0 && table[i - 1].depth == depth) {
         i--;
     }
-
     SP = i;
-
-    //printf("Last index : %d\n", last_index);
-    
 }
 
 int remove_var() {
@@ -74,10 +68,9 @@ int check_exist(char name[SIZE_NAME], int depth) {
     for ( ; i >= 0; --i)
     {
         if (strcmp(table[i].name, name) == 0 && table[i].depth == depth) {
-
-            fprintf(stderr, ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " already exists at this depth.\n", name);
-            NB_ERROR++;
-            //exit(2);
+            char *s; 
+            asprintf(&s,"id " ANSI_COLOR_CYAN "%s"  ANSI_COLOR_RESET " already exists at this depth", table[i].name);
+            yyerror(s);
         }
     }
 
@@ -93,18 +86,18 @@ int check_not_exist(char name[SIZE_NAME]) {
             return 1;
         }
     }
-
-    printf(ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " does not exist.\n", name);
-    NB_ERROR++;
-    //exit(2);
+    
+    char *s; 
+    asprintf(&s,"id"  ANSI_COLOR_CYAN " %s"  ANSI_COLOR_RESET " does not exist", name);
+    yyerror(s);
     return -1;
 }
 
 int check_not_init(int index) {
     if (table[index].init == IS_NOT_INIT) {
-        fprintf(stderr, ANSI_COLOR_RED "Error : " ANSI_COLOR_RESET "id " ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " not init.\n", table[index].name);
-        NB_ERROR++;
-        //exit(2);
+        char *s; 
+        asprintf(&s,"id" ANSI_COLOR_CYAN "%s" ANSI_COLOR_RESET " not init", table[index].name);
+        yyerror(s);
     }
 
     return 0;
@@ -120,10 +113,6 @@ int print() {
     }
     fprintf(stderr, "========================================\n");
     return 0;
-}
-
-int get_NB_ERROR() {
-    return NB_ERROR;
 }
 
 int get_SP() {

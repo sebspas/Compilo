@@ -4,6 +4,8 @@
 #include "y.tab.h"
 %}
 
+%option yylineno
+
 blancs [ \t\n]+ 
 nb [0-9]+ 
 id [a-zA-Z]+[0-9]*

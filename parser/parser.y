@@ -1,18 +1,23 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "tabSymb.h"
 #include "tabFunc.h"
 #include "error.h"
-#define TYPE_INT 1
 
+#define TYPE_INT 1
 #define VRet 29
 #define ADR_RET 30
 #define BP 31
 
+int NB_ERROR = 0;
+
 int var[26];
-void yyerror(char *s);
+void yyerror(const char *s);
 int current_depth = 0;
+extern int yylineno;
 
 enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, JMPR, NEG };
 char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "JMPR", "NEG" };
@@ -22,10 +27,6 @@ int index_instr = 0;
 
 void set_dest_jmp(int pos_inst, int dest) {
     instr[pos_inst][1] = dest;
-}
-
-void set_afc() {
-
 }
 
 int op_instr(int op, int a, int b, int c) {
@@ -52,7 +53,7 @@ int affect_instr(int b, int c) {
 }
 
 void affiche_instrs() {
-    fprintf(stderr, ANSI_COLOR_GREEN "Compilation terminé avec " ANSI_COLOR_RESET " " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " errors.\n", get_NB_ERROR());
+    fprintf(stderr, ANSI_COLOR_GREEN "Compilation terminé avec " ANSI_COLOR_RESET " " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " errors.\n", NB_ERROR);
 
     int i;
     for(i = 0; i < index_instr; i++) {
@@ -75,16 +76,15 @@ void affiche_instrs() {
 %left tP0 tPF
 
 %type <nb> E Params ParamsNext
+%error-verbose
 %start Prg
 %%
-Prg :        Fonction Prg | ;
-Fonction :    tINT tID {
-
-    //printf("debut de fonction:\n");print();
-
-}
-
-tPO Args tPF {
+Prg :        { op_instr(JMP, -1, 42, 42); } Fonction Prg | ;
+Fonction :    tINT tID tPO Args tPF {
+                if (strcmp($2,"main") == 0) {
+                    // on met a jour le JMP de début du code
+                    set_dest_jmp(0, index_instr);
+                }
                 // réserver de la place pour l'adr de retour
                 add_symb("@prev_ret", TYPE_INT, IS_INIT, current_depth+1);
                 //printf("add fun: %s %d\n", $2, index_instr);
@@ -117,6 +117,7 @@ Decl1 :        tID {
                 };
 
 Affect :        tID tEGAL E tPVIR {
+                    check_not_exist($1);
                     int index = get_index_by_name($1);
                     affect_instr($3, index);
                 };
@@ -127,7 +128,7 @@ Invoc :         tID tPO Params tPF {
                     // on retourne après le JMP vers la fonction
                     //printf("TS in invoc:\n");
                     //print();
-                    op_instr(STORE, adr_ret, 30, 42);
+                    op_instr(STORE, adr_ret, ADR_RET, 42);
 
                     // on le met dans la memoire
                     op_instr(AFC, 28, get_SP() - $3 - 1, 42);
@@ -151,12 +152,8 @@ Invoc :         tID tPO Params tPF {
 
 Return : tRETURN E tPVIR { 
             remove_var();
-            //printf("return\n"); 
-            //print(); 
-
             // on met la valeur de retour dans r29
             op_instr(LOAD, VRet, $2, 42);
-
             // on jmp a cette addresse
             op_instr(JMPR, ADR_RET, 42, 42);
 };
@@ -197,7 +194,7 @@ E :     tPO E tPF {
                 $$ = pos;
          }
         | tID { 
-                print();
+                //print();
                 check_not_exist($1);
                 int index = get_index_by_name($1);
                 check_not_init(index);
@@ -232,11 +229,14 @@ E :     tPO E tPF {
         | E tINFEG E    { $$ = op_arith(INFE, $1, $3); }; 
 
 %%
-void yyerror(char *s) { fprintf(stderr , "%s\n", s); }
+void yyerror(const char *s) { 
+    fprintf(stderr , ANSI_COLOR_RED "Error :" ANSI_COLOR_RESET " %s at line " ANSI_COLOR_MAGENTA "%d" ANSI_COLOR_RESET ".\n", s, yylineno);
+    NB_ERROR++; 
+}
 
 int main(void) {
-        //printf("Mon Parser\n"); // yydebug =1;
-        yyparse ();
-        affiche_instrs();
-        return 0;
+    //printf("Mon Parser\n"); // yydebug =1;
+    yyparse ();
+    affiche_instrs();
+    return 0;
 }

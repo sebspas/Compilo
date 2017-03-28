@@ -47,11 +47,10 @@ int affiche_mem(){
 #define RET 30
 
 int translate(){
-	int i;
-	i = 37;
-reg[RET] = index_instr;
+	int i = 0;
+	reg[RET] = index_instr;
 	while (i<index_instr){
-printf("ins @%02d:  ", i);
+		printf("ins @%02d:  ", i);
 		int bp = reg[BP];
 		switch(instr[i][0]) {
 
@@ -168,7 +167,10 @@ printf("====\n");
 
 					if (reg[instr[i][1]] > reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par default
 					}
+					
 					printf("SUP \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
@@ -189,8 +191,11 @@ printf("====\n");
 
 					if (reg[instr[i][1]] >= reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par default
 					}
-					printf("SUPE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					
+					printf("SUP \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
 
@@ -198,28 +203,29 @@ printf("====\n");
 					if (reg[instr[i][2]] >= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
-					printf("SUPE \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
+					printf("SUP \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
 				}
 
 				break;
-
 			case INFE : 
 				// INFE Ri <- 1 si Rj <= Rk; 0 sinon
 
 				if (instr[i][3] == 42){
-
+					
 					if (reg[instr[i][1]] <= reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par defaut
 					}
-					printf("INFE \tr%d \tr%d \n", instr[i][1], instr[i][2]);
+					printf("INF \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
-					reg[instr[i][1]] = 0; //par defaut
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] <= reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
-					printf("INFE \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
+					printf("INF \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
 				}
 
 				break;
@@ -257,22 +263,24 @@ printf("====\n");
 
 			case INF :
 				// INF Ri <- 1 si Rj < Rk; 0 sinon
-				reg[instr[i][1]] = 0; //par defaut
 
 				if (instr[i][3] == 42){
-
+					
 					if (reg[instr[i][1]] < reg[instr[i][2]]){
 						reg[instr[i][1]] = 1;
+					} else {
+						reg[instr[i][1]] = 0; //par defaut
 					}
 					printf("INF \tr%d \tr%d \n", instr[i][1], instr[i][2]);
 				}
 				else{
 
+					reg[instr[i][1]] = 0; //par defaut
 					if (reg[instr[i][2]] < reg[instr[i][3]]){
 						reg[instr[i][1]] = 1;
 					}
 					printf("INF \tr%d \tr%d \tr%d \n", instr[i][1], instr[i][2], instr[i][3]);
-				} 
+				}
 
 				break;
 
