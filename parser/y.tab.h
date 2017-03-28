@@ -53,26 +53,27 @@ extern int yydebug;
     tDIV = 263,
     tMOD = 264,
     tRETURN = 265,
-    tMAIN = 266,
-    tELSE = 267,
-    tINT = 268,
-    tOR = 269,
-    tAND = 270,
-    tVIR = 271,
-    tPVIR = 272,
-    tACO = 273,
-    tACF = 274,
-    tEGEG = 275,
-    tINF = 276,
-    tINFEG = 277,
-    tSUP = 278,
-    tSUPEG = 279,
-    tNB = 280,
-    tIF = 281,
-    tWHILE = 282,
-    tPO = 283,
-    tID = 284,
-    tP0 = 285
+    tPRINTF = 266,
+    tMAIN = 267,
+    tELSE = 268,
+    tINT = 269,
+    tOR = 270,
+    tAND = 271,
+    tVIR = 272,
+    tPVIR = 273,
+    tACO = 274,
+    tACF = 275,
+    tEGEG = 276,
+    tINF = 277,
+    tINFEG = 278,
+    tSUP = 279,
+    tSUPEG = 280,
+    tNB = 281,
+    tIF = 282,
+    tWHILE = 283,
+    tPO = 284,
+    tID = 285,
+    tP0 = 286
   };
 #endif
 /* Tokens.  */
@@ -84,26 +85,27 @@ extern int yydebug;
 #define tDIV 263
 #define tMOD 264
 #define tRETURN 265
-#define tMAIN 266
-#define tELSE 267
-#define tINT 268
-#define tOR 269
-#define tAND 270
-#define tVIR 271
-#define tPVIR 272
-#define tACO 273
-#define tACF 274
-#define tEGEG 275
-#define tINF 276
-#define tINFEG 277
-#define tSUP 278
-#define tSUPEG 279
-#define tNB 280
-#define tIF 281
-#define tWHILE 282
-#define tPO 283
-#define tID 284
-#define tP0 285
+#define tPRINTF 266
+#define tMAIN 267
+#define tELSE 268
+#define tINT 269
+#define tOR 270
+#define tAND 271
+#define tVIR 272
+#define tPVIR 273
+#define tACO 274
+#define tACF 275
+#define tEGEG 276
+#define tINF 277
+#define tINFEG 278
+#define tSUP 279
+#define tSUPEG 280
+#define tNB 281
+#define tIF 282
+#define tWHILE 283
+#define tPO 284
+#define tID 285
+#define tP0 286
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -113,7 +115,7 @@ union YYSTYPE
 #line 64 "parser.y" /* yacc.c:1909  */
  int nb; char var[16]; 
 
-#line 117 "y.tab.h" /* yacc.c:1909  */
+#line 119 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

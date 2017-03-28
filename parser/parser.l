@@ -38,6 +38,7 @@ id [a-zA-Z]+[0-9]*
 "while"     return tWHILE;
 "int"       return tINT;
 "return"    return tRETURN;
+"printf"     return tPRINTF;
 {id} {
     if (strlen(yytext) >= sizeof(yylval.var)-1 ){
         fprintf(stderr, "Var trop longue\n");

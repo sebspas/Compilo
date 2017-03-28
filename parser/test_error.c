@@ -5,4 +5,5 @@ int maFonc(int a) {
 
 int main() {
     int b = maFonc(5);
+    printf(b);
 }

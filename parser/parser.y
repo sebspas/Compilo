@@ -19,8 +19,8 @@ void yyerror(const char *s);
 int current_depth = 0;
 extern int yylineno;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, JMPR, NEG };
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "JMPR", "NEG" };
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, JMPR, NEG, PRI };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "JMPR", "NEG", "PRI" };
 
 int instr[1024][4];
 int index_instr = 0;
@@ -62,7 +62,7 @@ void affiche_instrs() {
 }
 %}
 %union { int nb; char var[16]; }
-%token tEGAL tPF tMOINS tPLUS tSTAR tDIV tMOD tRETURN
+%token tEGAL tPF tMOINS tPLUS tSTAR tDIV tMOD tRETURN tPRINTF
 %token tMAIN tELSE tINT tOR tAND tVIR tPVIR tACO tACF
 %token tEGEG tINF tINFEG tSUP tSUPEG
 %token <nb> tNB tIF tWHILE tPO
@@ -99,7 +99,7 @@ Arg :        tINT tID {
 
 Body :        tACO { current_depth++; print(); } Instrcs tACF { remove_depth(current_depth); current_depth--; };
 Instrcs :    Instr Instrcs | ;
-Instr :        Decl | If | While | Affect | Invoc tPVIR | Return;
+Instr :        Decl | If | While | Affect | Print | Invoc tPVIR | Return;
 
 Decl :        tINT DeclX tPVIR;
 DeclX :        Decl1 | Decl1 tVIR DeclX;
@@ -115,6 +115,12 @@ Decl1 :        tID {
                     int index = add_symb($1, TYPE_INT, IS_INIT, current_depth); 
                     //affect_instr($3, index);
                 };
+
+Print : tPRINTF tPO tID tPF tPVIR {
+    int adr_E =  get_index_by_name($3);
+    op_instr(LOAD, 28, adr_E, 42);
+    op_instr(PRI, 28, 42, 42);
+};
 
 Affect :        tID tEGAL E tPVIR {
                     check_not_exist($1);
