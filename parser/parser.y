@@ -19,8 +19,8 @@ void yyerror(const char *s);
 int current_depth = 0;
 extern int yylineno;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPI, JMPR, NEG, PRI };
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPI", "JMPR", "NEG", "PRI" };
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPR, NEG, PRI };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG", "PRI" };
 
 int instr[1024][4];
 int index_instr = 0;
@@ -78,7 +78,7 @@ void affiche_instrs() {
 %error-verbose
 %start Prg
 %%
-Prg :         Fonction Prg | ;
+Prg :       Fonction Prg | ;
 Fonction :    tINT tID tPO Args tPF {
                 if (strcmp($2,"main") == 0) {
                     // on met a jour le JMP de début du code
