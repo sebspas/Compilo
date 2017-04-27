@@ -38,7 +38,6 @@ int op_instr(int op, int a, int b, int c) {
 }
 
 int op_arith(int op, int a, int b) {
-
     op_instr(LOAD, 0, a, 42);
     op_instr(LOAD, 1, b, 42);
     op_instr(op, 0, 1, 42);
