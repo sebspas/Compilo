@@ -1,6 +1,6 @@
 #!/bash
 make
-./parser < test_error.c > asm.txt
+./parser < text.c > asm.txt
 cd ../interpretor
 make
 ./interpretor < ../parser/asm.txt

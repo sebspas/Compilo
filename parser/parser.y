@@ -78,7 +78,7 @@ void affiche_instrs() {
 %error-verbose
 %start Prg
 %%
-Prg :        { op_instr(JMP, -1, 42, 42); } Fonction Prg | ;
+Prg :         Fonction Prg | ;
 Fonction :    tINT tID tPO Args tPF {
                 if (strcmp($2,"main") == 0) {
                     // on met a jour le JMP de début du code
@@ -241,6 +241,7 @@ void yyerror(const char *s) {
 
 int main(void) {
     //printf("Mon Parser\n"); // yydebug =1;
+    op_instr(JMP, -1, 42, 42);
     yyparse ();
     affiche_instrs();
     return 0;
