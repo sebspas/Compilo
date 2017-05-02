@@ -58,3 +58,4 @@ id [a-zA-Z]+[0-9]*
 "<"         return tINF;
 ">="        return tSUPEG;
 "<="        return tINFEG;
+.           { printf("sdfsfdsfsdf\n");}

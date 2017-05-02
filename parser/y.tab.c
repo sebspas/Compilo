@@ -1465,7 +1465,7 @@ yyreduce:
 
   case 26:
 #line 110 "parser.y" /* yacc.c:1646  */
-    { 
+    {
                     remove_var();
                     /*printf("Decl = \n");*/
                     check_exist((yyvsp[-2].var), current_depth);

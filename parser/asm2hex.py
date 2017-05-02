@@ -5,21 +5,21 @@ opcode = \
 	, "SUB": 3
 	, "DIV": 4
 	, "COP": 5
+	, "AFC": 6
 	, "LOAD": 7
 	, "STORE": 8
-	, "AFC": 9
-	, "SUP": 10
-	, "SUPE": 11
-	, "INF": 12
-	, "INFE": 13
-	, "EQU": 14
-	, "OR": 15
-	, "AND": 16
-	, "NEG": 17
-	, "JMP": 18
-	, "JMPC": 19
-	, "JMPR": 20
-	, "PRI": 21
+	, "EQU": 9
+	, "INF": 10
+	, "INFE": 11
+	, "SUP": 12
+	, "SUPE": 13
+	, "JMP": 14
+	, "JMPC": 15
+	, "JMPR": 16
+	, "OR": 17
+	, "AND": 18
+	, "NEG": 19
+	, "PRI": 20
 	}
 
 lines = open("asm.txt", "r").readlines()

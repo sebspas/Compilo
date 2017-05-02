@@ -1,13 +1,5 @@
-int fib(int n){
-  if (n < 2) {
-  	return n;
-  }
-  else {
-	  return fib(n-1) + fib(n-2);
-  }
-}
-
 int main() {
-	int a;
-	a = fib(15);
+	int x = 15;
+	int y = 10;
+	int a = x + y;
 }

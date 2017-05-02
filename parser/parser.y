@@ -107,7 +107,7 @@ Decl1 :        tID {
                     check_exist($1, current_depth);
                     add_symb($1, TYPE_INT, IS_INIT, current_depth);  
                 }
-               | tID tEGAL E { 
+               | tID tEGAL E {
                     remove_var();
                     /*printf("Decl = \n");*/
                     check_exist($1, current_depth);
