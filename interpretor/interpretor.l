@@ -36,6 +36,7 @@ id [a-zA-Z]+[0-9]*
 "JMP"		return tJMP;
 "JMPR"		return tJMPR;
 "NEG"		return tNEG;
+"PRI"       return tPRI;
 
 {id} {
     if (strlen(yytext) >= sizeof(yylval.var)-1 ){

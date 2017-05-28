@@ -11,9 +11,9 @@ int instr[1024][4];
 int index_instr = 0;
 int index_mem = 0;
 
-enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPR, NEG };
+enum {NOP, LOAD, STORE, AFC, COP, ADD, SUB, MUL, DIV, SUP, SUPE, INFE, EQU, OR, AND, INF, JMPC, JMP, JMPR, NEG, PRI };
 
-char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG" };
+char* TAB[] = {"NOP","LOAD", "STORE", "AFC", "COP", "ADD", "SUB", "MUL", "DIV", "SUP", "SUPE", "INFE", "EQU", "OR", "AND", "INF", "JMPC", "JMP", "JMPR", "NEG", "PRI" };
 
 int tab_instr(int op, int a, int b, int c) {
 
@@ -53,6 +53,10 @@ int translate(){
 		printf("ins @%02d:  ", i);
 		int bp = reg[BP];
 		switch(instr[i][0]) {
+
+			case PRI:
+				printf("PRINTF %d\n", reg[instr[i][1]]);
+				break;
 
 			case NOP : 
 
@@ -324,7 +328,7 @@ affiche_mem();
 
 %}
 %union { int nb; char var[16]; }
-%token tNOP tLOAD tSTORE tAFC tCOP tADD tSUB tMUL tDIV tSUP
+%token tNOP tLOAD tSTORE tAFC tCOP tADD tSUB tMUL tDIV tSUP tPRI
 %token tSUPE tINFE tEQU tOR tAND tINF tJMPC tJMP tJMPR tNEG
 %token <nb> tNB
 %token <var> tID
@@ -343,7 +347,7 @@ Asm :	ListeInstr ;
 
 ListeInstr :	Instr | Instr ListeInstr ;
 
-Instr :		NOP | LOAD | STORE | AFC | COP | ADD | SUB | MUL | DIV | SUP | SUPE | INFE | EQU | OR | AND | INF | JMPC | JMP | JMPR | NEG ;
+Instr :		NOP | LOAD | STORE | AFC | COP | ADD | SUB | MUL | DIV | SUP | SUPE | INFE | EQU | OR | AND | INF | JMPC | JMP | JMPR | NEG | PRI ;
 
 NOP : 		tNOP ;
 
@@ -384,6 +388,8 @@ JMP : 		tJMP tNB tNB tNB { tab_instr(JMP, $2, $3, $4); } ;
 JMPR : 		tJMPR tNB tNB tNB { tab_instr(JMPR, $2, $3, $4); } ;
 
 NEG : 		tNEG tNB tNB tNB { tab_instr(NEG, $2, $3, $4); } ;
+
+PRI : 		tPRI tNB tNB tNB { tab_instr(PRI, $2, $3, $4); } ;
 
 
 %%

@@ -55,28 +55,29 @@ extern int yydebug;
     tMUL = 265,
     tDIV = 266,
     tSUP = 267,
-    tSUPE = 268,
-    tINFE = 269,
-    tEQU = 270,
-    tOR = 271,
-    tAND = 272,
-    tINF = 273,
-    tJMPC = 274,
-    tJMP = 275,
-    tJMPR = 276,
-    tNEG = 277,
-    tNB = 278,
-    tID = 279,
-    tEGAL = 280,
-    tINFEG = 281,
-    tSUPEG = 282,
-    tEGEG = 283,
-    tPLUS = 284,
-    tMOINS = 285,
-    tSTAR = 286,
-    tMOD = 287,
-    tP0 = 288,
-    tPF = 289
+    tPRI = 268,
+    tSUPE = 269,
+    tINFE = 270,
+    tEQU = 271,
+    tOR = 272,
+    tAND = 273,
+    tINF = 274,
+    tJMPC = 275,
+    tJMP = 276,
+    tJMPR = 277,
+    tNEG = 278,
+    tNB = 279,
+    tID = 280,
+    tEGAL = 281,
+    tINFEG = 282,
+    tSUPEG = 283,
+    tEGEG = 284,
+    tPLUS = 285,
+    tMOINS = 286,
+    tSTAR = 287,
+    tMOD = 288,
+    tP0 = 289,
+    tPF = 290
   };
 #endif
 /* Tokens.  */
@@ -90,38 +91,39 @@ extern int yydebug;
 #define tMUL 265
 #define tDIV 266
 #define tSUP 267
-#define tSUPE 268
-#define tINFE 269
-#define tEQU 270
-#define tOR 271
-#define tAND 272
-#define tINF 273
-#define tJMPC 274
-#define tJMP 275
-#define tJMPR 276
-#define tNEG 277
-#define tNB 278
-#define tID 279
-#define tEGAL 280
-#define tINFEG 281
-#define tSUPEG 282
-#define tEGEG 283
-#define tPLUS 284
-#define tMOINS 285
-#define tSTAR 286
-#define tMOD 287
-#define tP0 288
-#define tPF 289
+#define tPRI 268
+#define tSUPE 269
+#define tINFE 270
+#define tEQU 271
+#define tOR 272
+#define tAND 273
+#define tINF 274
+#define tJMPC 275
+#define tJMP 276
+#define tJMPR 277
+#define tNEG 278
+#define tNB 279
+#define tID 280
+#define tEGAL 281
+#define tINFEG 282
+#define tSUPEG 283
+#define tEGEG 284
+#define tPLUS 285
+#define tMOINS 286
+#define tSTAR 287
+#define tMOD 288
+#define tP0 289
+#define tPF 290
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 326 "interpretor.y" /* yacc.c:1909  */
+#line 330 "interpretor.y" /* yacc.c:1909  */
  int nb; char var[16]; 
 
-#line 125 "y.tab.h" /* yacc.c:1909  */
+#line 127 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
